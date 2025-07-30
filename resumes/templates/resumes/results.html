@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-[#0f172a] py-16 px-4 sm:px-6 lg:px-8">
+
+    <!-- Heading -->
+    <div class="text-center mb-12">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-snug">
+            Job Recommendations for {{ user.first_name }}
+        </h1>
+    </div>
+
+    <!-- All Job Cards Displayed Together -->
+    <div class="grid grid-cols-1 gap-8 max-w-4xl mx-auto">
+        {% for job in recommendations %}
+        <div x-data="{ open: false }"
+            class="bg-blue-900 text-white rounded-2xl p-5 border border-blue-700 shadow-xl transition-all duration-300">
+            <!-- Header with Title and Match -->
+            <div class="flex justify-between items-center mb-4 cursor-pointer" @click="open = !open">
+                <div class="text-lg font-semibold">
+                    <i class="fas fa-briefcase text-blue-300 mr-1"></i>{{ job.title }}
+                </div>
+                <div
+                    class="text-sm font-bold {% if job.match_percent >= 70 %}text-green-300{% elif job.match_percent >= 40 %}text-yellow-300{% else %}text-red-400{% endif %}">
+                    {{ job.match_percent }}%
+                </div>
+            </div>
+
+            <!-- Description (toggle) -->
+            <div x-show="open" x-transition class="mt-2 space-y-3 text-sm text-white/90">
+                <p>{{ job.description }}</p>
+
+                <!-- Progress Bar -->
+                <div class="w-full h-2 bg-blue-900 rounded-full">
+                    <div class="h-2 {% if job.match_percent >= 70 %}bg-green-400{% elif job.match_percent >= 40 %}bg-yellow-400{% else %}bg-red-400{% endif %} rounded-full"
+                        style="width: {{ job.match_percent|stringformat:'d' }}%"></div>
+                </div>
+
+                <!-- Matched Skills -->
+                {% if job.matched_skills %}
+                <div>
+                    <h3 class="font-semibold text-white mb-1">Matched Skills:</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for skill in job.matched_skills %}
+                        <span class="bg-blue-600 px-3 py-1 rounded-full text-xs font-medium shadow-sm">
+                            {{ skill }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Unmatched Skills -->
+                {% if job.unmatched_skills %}
+                <div>
+                    <h3 class="font-semibold text-white mb-1">Unmatched Skills:</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for skill in job.unmatched_skills %}
+                        <span class="bg-red-600 px-3 py-1 rounded-full text-xs font-medium shadow-sm">
+                            {{ skill }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!--  Apply Now Button -->
+                <form method="post" action="{% url 'resumes:apply_job' job.job_id %}">
+                    {% csrf_token %}
+                    <button type="submit"
+                        class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                        Apply Now
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if not recommendations %}
+    <p class="text-white text-center text-lg w-full mt-10">Sorry, we couldn't find any suitable jobs based on your
+        resume.</p>
+    {% endif %}
+
+    <!-- Optional: Resume Skills Not Matched -->
+    {% if unmatched_skills %}
+    <div class="bg-[#1e3a8a] text-white max-w-4xl mx-auto mt-16 p-6 rounded-xl shadow-lg border border-blue-800">
+        <h3 class="text-lg font-bold mb-2">Unmatched Resume Skills</h3>
+        <p class="text-sm text-gray-300 mb-3">These skills were not found in any job descriptions:</p>
+        <div class="flex flex-wrap gap-3">
+            {% for skill in unmatched_skills %}
+            <span class="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                {{ skill }}
+            </span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Scripts -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Toast Welcome -->
+<script>
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Welcome to your Job Recommendations!',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+    });
+</script>
+
+<!--  Show Apply Success Popup if any message exists -->
+{% if messages %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% for message in messages %}
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: '{{ message|escapejs }}',
+            confirmButtonColor: '#3085d6',
+        });
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
+{% endblock %}

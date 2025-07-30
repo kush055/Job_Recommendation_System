@@ -1,0 +1,79 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.upload-container {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 30px;
+    border-radius: 20px;
+    width: 400px;
+    box-shadow: 0 0 20px #000;
+    animation: fadeIn 1s ease-in;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.dropzone {
+    border: 2px dashed #fff;
+    padding: 30px;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    transition: background 0.3s ease;
+}
+
+.dropzone.dragover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+input[type="file"] {
+    display: none;
+}
+
+label {
+    background-color: #fff;
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button {
+    width: 100%;
+    background-color: #00ffcc;
+    color: black;
+    font-weight: bold;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #00e6b8;
+}
+
+#filePreview {
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.form-errors {
+    color: #ff9999;
+    margin-bottom: 10px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}

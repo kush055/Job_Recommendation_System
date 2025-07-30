@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Activity History | SkillSniff{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-screen px-4 py-10">
+    <div
+        class="w-full max-w-3xl bg-blue-900 bg-opacity-70 backdrop-blur-md rounded-3xl shadow-xl p-8 text-white animate-fade-in-up">
+        <h2 class="text-3xl font-bold text-center mb-6">Activity History</h2>
+
+        {% if activities %}
+        <ul class="divide-y divide-blue-500 max-h-[500px] overflow-y-auto">
+            {% for activity in activities %}
+            <li class="py-4 flex flex-col md:flex-row md:justify-between md:items-start gap-2">
+                <div class="w-full">
+                    <p class="text-md font-semibold text-sky-300">{{ activity.get_action_display }}</p>
+                    {% if activity.details %}
+                    <p class="text-sm text-white/80 mt-1 break-words">{{ activity.details }}</p>
+                    {% endif %}
+                </div>
+                <span class="text-sm text-sky-200 whitespace-nowrap mt-2 md:mt-0 md:ml-4">
+                    {{ activity.timestamp|date:"M d, Y - h:i A" }}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-center text-sky-200 mt-6">No activity history found yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fade-in-up 0.6s ease-out both;
+    }
+</style>
+{% endblock %}

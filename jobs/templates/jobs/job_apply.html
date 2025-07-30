@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Apply{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center py-20 px-4">
+    <div class="bg-white bg-opacity-90 text-gray-900 rounded-3xl shadow-2xl w-full max-w-4xl backdrop-blur-md animate-fade-in-up flex flex-col md:flex-row overflow-hidden">
+
+        <!-- Left: Job Info -->
+        <div class="md:w-1/2 p-8 bg-gradient-to-br from-blue-200 to-blue-100">
+            <h2 class="text-2xl font-bold mb-4">Apply</h2>
+
+            <h3 class="text-3xl font-bold mb-2">{{ job.title }}</h3>
+            <p class="text-lg font-semibold">{{ job.company_name }}</p>
+            <p class="mt-2 text-sm text-gray-700"><strong>Location:</strong> {{ job.location }}</p>
+            <div class="mt-4 text-sm text-gray-800">
+                <strong>Job Description:</strong>
+                <p class="mt-1">{{ job.description }}</p>
+            </div>
+        </div>
+
+        <!-- Right: Application Form -->
+        <div class="md:w-1/2 p-8">
+            <h3 class="text-xl font-bold mb-4">Submit Your Application</h3>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label for="cover_letter" class="block font-medium mb-2">Cover Letter (optional)</label>
+                    <textarea name="cover_letter" rows="6" id="cover_letter"
+                        class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        placeholder="Write your cover letter here..."></textarea>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md transition-all duration-200">
+                    Submit Application
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

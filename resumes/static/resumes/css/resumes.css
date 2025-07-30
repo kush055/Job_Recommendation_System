@@ -1,0 +1,98 @@
+/* resume.css */
+
+/* Smooth scrolling across pages */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Headings with glowing neon style */
+.glow-text {
+  color: #fff;
+  text-shadow: 0 0 10px #e91e63, 0 0 20px #9c27b0, 0 0 30px #2196f3;
+}
+
+/* Resume cards with hover animation */
+.resume-card {
+  background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.resume-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Upload form container */
+.upload-box {
+  background-color: #ffffffcc;
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 2rem;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Stylish buttons */
+.fancy-btn {
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: transform 0.2s ease-in-out, background 0.3s;
+}
+
+.fancy-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #ff4b2b, #ff416c);
+}
+
+/* Fade-in slide animation for sections */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-slide-up {
+  animation: fadeSlideUp 0.8s ease-out forwards;
+}
+
+/* Text highlight effect */
+.highlight-text {
+  background: linear-gradient(90deg, #f093fb, #f5576c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+/* Toast Styles */
+.toast-message {
+  position: fixed;
+  top: 1rem;
+  right: -100%;
+  background-color: #323232;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  z-index: 1000;
+  opacity: 0.95;
+  transition: right 0.4s ease-in-out;
+}
+
+.toast-message.show {
+  right: 1rem;
+}
+
+/* Variants */
+.toast-message.success { background-color: #28a745; }
+.toast-message.error { background-color: #dc3545; }
+.toast-message.warning { background-color: #ffc107; color: black; }
+.toast-message.info { background-color: #17a2b8; }

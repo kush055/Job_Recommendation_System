@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login | SkillSniff{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center py-20 px-4">
+    <div
+        class="bg-blue-900 bg-opacity-80 text-white rounded-3xl shadow-2xl w-full max-w-4xl backdrop-blur-md animate-fade-in-up flex flex-col lg:flex-row overflow-hidden">
+        <div
+            class="w-full lg:w-1/2 p-10 flex flex-col justify-center items-center text-center bg-blue-950 bg-opacity-40">
+            <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent"
+                speed="1" style="width: 120px; height: 120px;" loop autoplay></lottie-player>
+            <h2 class="text-2xl font-bold text-white mt-4">Welcome Back</h2>
+            <p class="text-sm text-sky-200 mt-2">Log in to your account</p>
+        </div>
+
+        <div class="w-full lg:w-1/2 p-10">
+            <form id="loginForm" method="POST" class="space-y-6 animate-fade-in-up">
+                {% csrf_token %}
+
+                <input type="hidden" name="enc_username" id="enc_username">
+                <input type="hidden" name="enc_password" id="enc_password">
+                <input type="hidden" name="enc_key" id="enc_key">
+
+                <div>
+                    <label for="username" class="block text-sm text-sky-200 mb-1">Username</label>
+                    <input type="text" id="username"
+                        class="w-full px-4 py-2 bg-white text-black border border-blue-700 rounded-xl"
+                        placeholder="Username" required>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm text-sky-200 mb-1">Password</label>
+                    <input type="password" id="password"
+                        class="w-full px-4 py-2 bg-white text-black border border-blue-700 rounded-xl"
+                        placeholder="Password" required>
+                </div>
+
+                <div class="text-center mt-6">
+                    <button type="submit"
+                        class="w-full py-2 px-4 bg-sky-600 text-white rounded-xl hover:bg-sky-500 transition duration-200 shadow-md transform hover:scale-105">
+                        Login
+                    </button>
+                </div>
+            </form>
+
+            <p class="text-xs text-center text-sky-200 mt-6">
+                Don't have an account?
+                <a href="{% url 'accounts:register' %}" class="text-sky-400 hover:underline">Register here</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+<script>
+    const PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtIji6inpz5nEekgDVDmS
+Ls8fhwmWneSEc6TVRsAiAsQu0YLzAw4vGY2/jUYNDISAVwJShz3EUar+ES1u+c3x
+KrHmNHn9lcY1SbDun980rAUucgH2unk3U57tZxTN6p5Aj9IOkdxi1rJlnOawgG4F
+B4BIwSdmH1oTSMx0HeUYyel10MfakdsA8pevWvQMfQg6PZpVRy30fRsY8fFlpneX
+I+COpMdgXRONsl3ElytTc7O3O6eqgE9z9MPYD3CUUEsvrVw3+7WY2AmqA185xlvi
+Oc+5GBi5HYP2THKHVYiOiOdos/Ynx/YeoV5tKFFLKFlLPnU8YW7GaL4jCIkcAjz2
+iQIDAQAB
+-----END PUBLIC KEY-----`;
+
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const aesKey = CryptoJS.lib.WordArray.random(16);
+        const iv = CryptoJS.lib.WordArray.random(16);
+
+        // Encrypt the username and password using AES (CBC mode)
+        const encUsername = CryptoJS.AES.encrypt(username, aesKey, { iv: iv }).toString();
+        const encPassword = CryptoJS.AES.encrypt(password, aesKey, { iv: iv }).toString();
+
+        // Concatenate key + IV (32 bytes), then base64 encode the combined string
+        const combined = aesKey.clone().concat(iv);
+        console.log("AES Key + IV length:", combined, "bytes");
+        const combinedBase64 = CryptoJS.enc.Base64.stringify(combined);
+
+        // Encrypt the combined key+IV with RSA
+        const encryptor = new JSEncrypt();
+        encryptor.setPublicKey(PUBLIC_KEY);
+        console.log("Encrypting with public key:", combinedBase64.length, "bytes");
+        const encryptedKey = encryptor.encrypt(combinedBase64);
+        console.log("encryptedKey", encryptedKey)
+
+        document.getElementById("enc_username").value = encUsername;
+        document.getElementById("enc_password").value = encPassword;
+        document.getElementById("enc_key").value = encryptedKey;
+
+        this.submit();
+    });
+</script>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fade-in-up 0.8s ease-out both;
+    }
+</style>
+{% endblock %}

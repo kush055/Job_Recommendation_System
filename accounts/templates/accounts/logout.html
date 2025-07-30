@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Logged Out | SkillSniff{% endblock %}
+
+{% block content %}
+<div
+    class="flex flex-col items-center justify-center min-h-screen px-4 py-20 bg-blue-100 bg-opacity-40 backdrop-blur-md">
+
+    <div class="bg-white/10 text-white w-full max-w-xl p-10 rounded-3xl shadow-2xl animate-fade-in-up text-center">
+
+        <h1 class="text-3xl md:text-4xl font-bold mb-6 animate-soft-pulse">
+            You've Successfully Logged Out
+        </h1>
+
+        <p class="text-lg text-white/80 mb-6">
+            You have been logged out from the system. We hope to see you back soon!
+        </p>
+
+        <div class="space-y-4">
+            <a href="{% url 'accounts:login' %}"
+                class="inline-block bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full shadow-md transition duration-300 transform hover:scale-105">
+                Log In Again
+            </a>
+
+            <div>
+                <a href="{% url 'home' %}"
+                    class="text-white/70 hover:text-white text-base underline hover:font-semibold transition">
+                    Back to Home
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes softPulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.03);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fade-in-up 0.8s ease-out both;
+    }
+
+    .animate-soft-pulse {
+        animation: softPulse 2.5s infinite ease-in-out;
+    }
+</style>
+{% endblock %}

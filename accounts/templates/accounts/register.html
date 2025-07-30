@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register | SkillSniff{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center py-20 px-4">
+    <div
+        class="bg-blue-900 bg-opacity-80 backdrop-blur-md rounded-3xl shadow-xl p-10 w-full max-w-2xl animate-fade-in-up text-white">
+        <div class="text-center mb-6">
+            <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_touohxv0.json" background="transparent"
+                speed="1" style="width: 120px; height: 120px;" loop autoplay>
+            </lottie-player>
+            <h2 class="text-3xl font-bold text-white">Create Account</h2>
+            <p class="text-sm text-sky-200">Join our job recommendation platform</p>
+        </div>
+
+        {% if messages %}
+        <div class="mb-4 text-center">
+            {% for message in messages %}
+            <div class="text-sm text-red-400">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST" class="space-y-4 animate-fade-in-up">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for field in form %}
+                <div class="flex flex-col">
+                    <label for="{{ field.id_for_label }}" class="text-sm text-sky-100 mb-1">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                    <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-6">
+                <button type="submit"
+                    class="w-full md:w-auto py-2 px-6 bg-sky-600 text-white rounded-xl hover:bg-sky-700 transition shadow-md transform hover:scale-105 duration-200">
+                    Register
+                </button>
+            </div>
+        </form>
+
+        <p class="text-xs text-center text-sky-200 mt-4">
+            Already have an account?
+            <a href="{% url 'accounts:login' %}" class="text-sky-400 hover:underline">Login here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fade-in-up 0.8s ease-out both;
+    }
+</style>
+{% endblock %}
